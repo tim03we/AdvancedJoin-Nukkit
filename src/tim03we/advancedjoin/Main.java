@@ -37,24 +37,51 @@ public class Main extends PluginBase implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-        if (getConfig().getString("Spawn-Point").equals("")) getLogger().debug("Since no spawn point was set in the config, the player is not teleported.");
-        else getServer().loadLevel(getConfig().getString("Spawn-Point")); getServer().getScheduler().scheduleDelayedTask(new SpawnTask(this, event.getPlayer()), 1);
-        for (String command : getConfig().getStringList("Commands")) getServer().dispatchCommand(new ConsoleCommandSender(), command.replace("&", "§").replace("{player}", event.getPlayer().getName()));
-        if(getConfig().getBoolean("Inventory-Clear")) event.getPlayer().getInventory().clearAll();
-        if(getConfig().getBoolean("Health")) event.getPlayer().setHealth(20);
-        if(getConfig().getBoolean("Feed")) event.getPlayer().getFoodData().setLevel(20);
-        if(getConfig().getString("Welcome-Message").equals("")) getLogger().debug("The player will not receive a welcome message because none has been set in the config.");
-        else event.getPlayer().sendMessage(getConfig().getString("Welcome-Message").replace("{player}", event.getPlayer().getName()));
-        if(getConfig().getBoolean("Enable-JoinMessage")) if (event.getPlayer().isOp()) event.setJoinMessage(getConfig().getString("JoinMessage-OP").replace("&", "§").replace("{player}", event.getPlayer().getName()));
-        else if(event.getPlayer().hasPermission("staff.join")) event.setJoinMessage(getConfig().getString("JoinMessage-Staff").replace("&", "§").replace("{player}", event.getPlayer().getName()));
-        else event.setJoinMessage(getConfig().getString("JoinMessage").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+        if (getConfig().getString("Spawn-Point").equals("")) {
+            getLogger().debug("Since no spawn point was set in the config, the player is not teleported.");
+        } else {
+            getServer().loadLevel(getConfig().getString("Spawn-Point"));
+            getServer().getScheduler().scheduleDelayedTask(new SpawnTask(this, event.getPlayer()), 1);
+        }
+        for (String command : getConfig().getStringList("Commands")) {
+            getServer().dispatchCommand(new ConsoleCommandSender(), command.replace("&", "§").replace("{player}", event.getPlayer().getName()));
+        }
+        if(getConfig().getBoolean("Inventory-Clear")) {
+            event.getPlayer().getInventory().clearAll();
+        }
+        if(getConfig().getBoolean("Health")) {
+            event.getPlayer().setHealth(20);
+        }
+        if(getConfig().getBoolean("Feed")) {
+            event.getPlayer().getFoodData().setLevel(20);
+        }
+        if(getConfig().getString("Welcome-Message").equals("")) {
+            getLogger().debug("The player will not receive a welcome message because none has been set in the config.");
+        } else {
+            event.getPlayer().sendMessage(getConfig().getString("Welcome-Message").replace("{player}", event.getPlayer().getName()));
+        }
+        if(getConfig().getBoolean("Enable-JoinMessage")) {
+            if (event.getPlayer().isOp()) {
+                event.setJoinMessage(getConfig().getString("JoinMessage-OP").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            } else if(event.getPlayer().hasPermission("staff.join")) {
+                event.setJoinMessage(getConfig().getString("JoinMessage-Staff").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            } else {
+                event.setJoinMessage(getConfig().getString("JoinMessage").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            }
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
     {
-        if(getConfig().getBoolean("Enable-QuitMessage")) if (event.getPlayer().isOp()) event.setQuitMessage(getConfig().getString("QuitMessage-OP").replace("&", "§").replace("{player}", event.getPlayer().getName()));
-        else if(event.getPlayer().hasPermission("staff.join")) event.setQuitMessage(getConfig().getString("QuitMessage-Staff").replace("&", "§").replace("{player}", event.getPlayer().getName()));
-        else event.setQuitMessage(getConfig().getString("QuitMessage").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+        if(getConfig().getBoolean("Enable-QuitMessage")) {
+            if (event.getPlayer().isOp()) {
+                event.setQuitMessage(getConfig().getString("QuitMessage-OP").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            } else if(event.getPlayer().hasPermission("staff.quit")) {
+                event.setQuitMessage(getConfig().getString("QuitMessage-Staff").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            } else {
+                event.setQuitMessage(getConfig().getString("QuitMessage").replace("&", "§").replace("{player}", event.getPlayer().getName()));
+            }
+        }
     }
 }
